@@ -1,0 +1,78 @@
+  [1m[36m (129.9ms)[0m  [1mCREATE TABLE "schema_migrations" ("version" character varying(255) NOT NULL) [0m
+  [1m[35m (84.6ms)[0m  CREATE UNIQUE INDEX "unique_schema_migrations" ON "schema_migrations" ("version")
+  [1m[36mActiveRecord::SchemaMigration Load (0.5ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Migrating to CreateUsers (20131119044914)
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36m (86.0ms)[0m  [1mCREATE TABLE "users" ("id" serial primary key, "email" character varying(255) NOT NULL, "username" character varying(255) NOT NULL, "password" character varying(255) NOT NULL, "salt" character varying(255) NOT NULL, "reset_token" character varying(255) NOT NULL, "phone_number" character varying(255) NOT NULL, "is_private" boolean DEFAULT 'f' NOT NULL, "created_at" timestamp, "updated_at" timestamp) [0m
+  [1m[35m (3.8ms)[0m  CREATE UNIQUE INDEX "index_users_on_email" ON "users" ("email")
+  [1m[36m (3.9ms)[0m  [1mCREATE UNIQUE INDEX "index_users_on_username" ON "users" ("username")[0m
+  [1m[35m (3.8ms)[0m  CREATE UNIQUE INDEX "index_users_on_phone_number" ON "users" ("phone_number")
+  [1m[36mSQL (51.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20131119044914"]]
+  [1m[35m (1.8ms)[0m  COMMIT
+Migrating to CreateRequests (20131119044954)
+  [1m[36m (3.5ms)[0m  [1mBEGIN[0m
+  [1m[35m (5.0ms)[0m  CREATE TABLE "requests" ("id" serial primary key, "requesting_user_id" integer NOT NULL, "requested_user_id" integer NOT NULL, "created_at" timestamp, "updated_at" timestamp) 
+  [1m[36m (3.4ms)[0m  [1mCREATE UNIQUE INDEX "index_requests_on_requesting_user_id_and_requested_user_id" ON "requests" ("requesting_user_id", "requested_user_id")[0m
+  [1m[35mSQL (35.8ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20131119044954"]]
+  [1m[36m (0.9ms)[0m  [1mCOMMIT[0m
+Migrating to CreateTrackers (20131119044958)
+  [1m[35m (3.8ms)[0m  BEGIN
+  [1m[36m (6.2ms)[0m  [1mCREATE TABLE "trackers" ("id" serial primary key, "tracking_user_id" integer NOT NULL, "tracked_user_id" integer NOT NULL, "created_at" timestamp, "updated_at" timestamp) [0m
+  [1m[35m (3.5ms)[0m  CREATE UNIQUE INDEX "index_trackers_on_tracking_user_id_and_tracked_user_id" ON "trackers" ("tracking_user_id", "tracked_user_id")
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20131119044958"]]
+  [1m[35m (0.5ms)[0m  COMMIT
+Migrating to CreateFriendships (20131119051725)
+  [1m[36m (3.4ms)[0m  [1mBEGIN[0m
+  [1m[35m (5.0ms)[0m  CREATE TABLE "friendships" ("id" serial primary key, "following_user_id" integer NOT NULL, "followed_user_id" integer NOT NULL, "followed_user_name" character varying(255) NOT NULL, "is_approved" boolean DEFAULT 't' NOT NULL, "created_at" timestamp, "updated_at" timestamp) 
+  [1m[36m (3.7ms)[0m  [1mCREATE UNIQUE INDEX "index_friendships_on_following_user_id_and_followed_user_id" ON "friendships" ("following_user_id", "followed_user_id")[0m
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20131119051725"]]
+  [1m[36m (0.5ms)[0m  [1mCOMMIT[0m
+Migrating to CreateBlockedUsers (20131119053154)
+  [1m[35m (3.7ms)[0m  BEGIN
+  [1m[36m (0.8ms)[0m  [1mCREATE TABLE "blocked_users" ("blocking_user_id" integer NOT NULL, "blocked_user_id" integer NOT NULL, "created_at" timestamp, "updated_at" timestamp) [0m
+  [1m[35m (3.7ms)[0m  CREATE UNIQUE INDEX "index_blocked_users_on_blocking_user_id_and_blocked_user_id" ON "blocked_users" ("blocking_user_id", "blocked_user_id")
+  [1m[36mSQL (0.3ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20131119053154"]]
+  [1m[35m (0.5ms)[0m  COMMIT
+Migrating to AddLatitudeAndLongitudeToTracker (20131120035953)
+  [1m[36m (0.4ms)[0m  [1mBEGIN[0m
+  [1m[35m (0.7ms)[0m  ALTER TABLE "trackers" ADD COLUMN "latitude" float
+  [1m[36m (0.2ms)[0m  [1mALTER TABLE "trackers" ADD COLUMN "longitude" float[0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20131120035953"]]
+  [1m[36m (13.5ms)[0m  [1mCOMMIT[0m
+Migrating to CreateRequestTypes (20131126032131)
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36m (17.1ms)[0m  [1mCREATE TABLE "request_types" ("id" serial primary key, "created_at" timestamp, "updated_at" timestamp) [0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES ($1)  [["version", "20131126032131"]]
+  [1m[36m (18.8ms)[0m  [1mCOMMIT[0m
+Migrating to AddLatitudeAndLongitudeToRequest (20131127090107)
+  [1m[35m (3.1ms)[0m  BEGIN
+  [1m[36m (0.4ms)[0m  [1mALTER TABLE "requests" ADD COLUMN "latitude" float[0m
+  [1m[35m (0.2ms)[0m  ALTER TABLE "requests" ADD COLUMN "longitude" float
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES ($1)[0m  [["version", "20131127090107"]]
+  [1m[35m (0.4ms)[0m  COMMIT
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+DEPRECATION WARNING: The following options in your User.has_many :recent_friendships declaration are deprecated: :limit. Please use a scope block instead. For example, the following:
+
+    has_many :spam_comments, conditions: { spam: true }, class_name: 'Comment'
+
+should be rewritten as the following:
+
+    has_many :spam_comments, -> { where spam: true }, class_name: 'Comment'
+. (called from <class:User> at /Users/mohamedeid/rails_apps/tacker/app/models/user.rb:17)
+DEPRECATION WARNING: The following options in your User.has_many :requests declaration are deprecated: :limit. Please use a scope block instead. For example, the following:
+
+    has_many :spam_comments, conditions: { spam: true }, class_name: 'Comment'
+
+should be rewritten as the following:
+
+    has_many :spam_comments, -> { where spam: true }, class_name: 'Comment'
+. (called from <class:User> at /Users/mohamedeid/rails_apps/tacker/app/models/user.rb:22)
+DEPRECATION WARNING: The following options in your User.has_many :trackers declaration are deprecated: :limit. Please use a scope block instead. For example, the following:
+
+    has_many :spam_comments, conditions: { spam: true }, class_name: 'Comment'
+
+should be rewritten as the following:
+
+    has_many :spam_comments, -> { where spam: true }, class_name: 'Comment'
+. (called from <class:User> at /Users/mohamedeid/rails_apps/tacker/app/models/user.rb:26)
+  [1m[36mUser Load (50.3ms)[0m  [1mSELECT "users".* FROM "users" ORDER BY "users"."id" ASC LIMIT 1[0m
